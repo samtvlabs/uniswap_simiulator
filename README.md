@@ -2,7 +2,7 @@
 
 Playing with getting data for univ3 positions. 
 
-#TODO
+## TODO
 
 - [ ] fix graphql data query
 - [ ] use [polar.rs](https://www.pola.rs/) to render data to dataframes.
