@@ -8,4 +8,5 @@ Playing with getting data for univ3 positions.
 - [ ] use [polar.rs](https://www.pola.rs/) to render data to dataframes.
 - [ ] Visualise position
 - [ ] Covert to CLI
-- ditch subgraphs and get data directly from [reth](https://github.com/paradigmxyz/reth/blob/main/examples/db-access.rs)
+- [ ] ditch subgraphs and get data directly from [reth](https://github.com/paradigmxyz/reth/blob/main/examples/db-access.rs)
+- [ ] use other data sources
