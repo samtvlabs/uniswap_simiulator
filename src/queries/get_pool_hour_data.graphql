@@ -1,0 +1,9 @@
+query GetPoolHourData($pool: String!, $periodStartUnix_gt: BigInt!, $periodStartUnix_lt: BigInt!) {
+  poolHourDatas(first: 1000, where: {pool: $pool, periodStartUnix_gt: $periodStartUnix_gt, periodStartUnix_lt: $periodStartUnix_lt}) {
+    periodStartUnix
+    tick
+    volumeUSD
+    feesUSD
+    sqrtPrice
+  }
+}
