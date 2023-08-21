@@ -1,14 +1,16 @@
 mod simulator;
 
-use simulator::{fetch_historical_data, simulate_liquidity};
 use clap::Parser;
+use simulator::{fetch_historical_data, simulate_liquidity, calculate_position_fees};
 
 fn get_subgraph_url(chain: &str) -> &'static str {
     match chain {
-        "mainnet" => "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
-        "rinkeby" => "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3-rinkeby",
-        "ropsten" => "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3-ropsten",
-        "kovan" => "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3-kovan",
+        "ethereum" => "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
+        "polygon" => "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon",
+        "celo" => "https://api.thegraph.com/subgraphs/name/jesse-sawa/uniswap-celo",
+        "optimism" => "https://api.thegraph.com/subgraphs/name/ianlapham/optimism-post-regenesis",
+        "arbitrum" => "https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-minimal",
+        "bnb" => "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-bsc",
         _ => panic!("Unsupported chain"),
     }
 }
