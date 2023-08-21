@@ -24,12 +24,12 @@ struct Opts {
     pair: String,
 
     /// The minimum price of the liquidity range
-    #[clap(short, long)]
-    min: i32,
+    #[clap(short = 'm', long)]
+    min: f64,
 
     /// The maximum price of the liquidity range
-    #[clap(short, long)]
-    max: i32,
+    #[clap(short = 'n', long)]
+    max: f64,
 
     /// The fee tier
     #[clap(short, long)]
@@ -49,8 +49,8 @@ fn main() {
 
     let chain = &opts.chain;
     let pair = &opts.pair;
-    let min = opts.min;
-    let max = opts.max;
+    let min = Some(opts.min);
+    let max = Some(opts.max);
     let fee = opts.fee;
     let start = opts.start;
     let end = opts.end;

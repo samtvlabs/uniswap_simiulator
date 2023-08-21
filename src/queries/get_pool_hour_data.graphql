@@ -1,5 +1,5 @@
 query GetPoolHourData($pool: String!, $periodStartUnix_gt: Int!, $periodStartUnix_lt: Int!) {
-  poolHourDatas(pool: $pool, periodStartUnix_gt: $periodStartUnix_gt, periodStartUnix_lt: $periodStartUnix_lt) {
+  poolHourDatas(first: 5, where: {pool: $pool, periodStartUnix_gt: $periodStartUnix_gt, periodStartUnix_lt: $periodStartUnix_lt}) {
     periodStartUnix
     tick
     volumeUSD
