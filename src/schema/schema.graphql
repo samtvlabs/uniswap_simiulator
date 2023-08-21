@@ -655,3 +655,16 @@ type TokenHourData @entity {
   # close price USD
   close: BigDecimal!
 }
+
+input PoolHourDataWhereInput {
+  pool: String!
+  periodStartUnix_gt: BigInt!
+  periodStartUnix_lt: BigInt!
+}
+
+type Query {
+  poolHourDatas(
+    first: Int!,
+    where: PoolHourDataWhereInput!
+  ): [PoolHourData!]!
+}
