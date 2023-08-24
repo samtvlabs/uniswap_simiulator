@@ -1,4 +1,4 @@
-scalar BigInt @rustc(scalar: "f64")
+scalar BigInt @rustc(scalar: "String")
 scalar BigDecimal @rustc(scalar: "f64")
 scalar Bytes @rustc(scalar: "String")
 
@@ -663,8 +663,11 @@ input PoolHourDataWhereInput {
 }
 
 type Query {
+  pool(id: ID!): Pool
   poolHourDatas(
     first: Int!,
     where: PoolHourDataWhereInput!
   ): [PoolHourData!]!
 }
+
+
