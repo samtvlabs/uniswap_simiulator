@@ -1,21 +1,26 @@
-mod simulator;
+mod thegraph;
+mod client_factory;
+mod data_source;
 
-use simulator::{fetch_historical_data, simulate_liquidity};
+use client_factory::create_client;
+use data_source::DataSource;
+
 use clap::Parser;
 
 fn get_subgraph_url(chain: &str) -> &'static str {
     match chain {
-        "mainnet" => "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
-        "rinkeby" => "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3-rinkeby",
-        "ropsten" => "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3-ropsten",
-        "kovan" => "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3-kovan",
+        "ethereum" => "https://api.thegraph.com/subgraphs/name/uniswap/uniswap-v3",
+        "polygon" => "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-polygon",
+        "celo" => "https://api.thegraph.com/subgraphs/name/jesse-sawa/uniswap-celo",
+        "optimism" => "https://api.thegraph.com/subgraphs/name/ianlapham/optimism-post-regenesis",
+        "arbitrum" => "https://api.thegraph.com/subgraphs/name/ianlapham/arbitrum-minimal",
+        "bnb" => "https://api.thegraph.com/subgraphs/name/ianlapham/uniswap-v3-bsc",
         _ => panic!("Unsupported chain"),
     }
 }
 
 #[derive(clap::Parser)]
 struct Opts {
-    /// The EVM chain that Uniswap V3 is deployed to
     #[clap(short, long)]
     chain: String,
 
@@ -23,43 +28,44 @@ struct Opts {
     #[clap(short, long)]
     pair: String,
 
-    /// The minimum price of the liquidity range
-    #[clap(short = 'm', long)]
-    min: f64,
-
-    /// The maximum price of the liquidity range
-    #[clap(short = 'n', long)]
-    max: f64,
-
-    /// The fee tier
+    /// Data source (TheGraph, RPC, Reth, etc.)
     #[clap(short, long)]
-    fee: f64,
+    data_source: String,
+}
 
-    /// The start time of the simulation
-    #[clap(short, long)]
-    start: u64,
-
-    /// The end time of the simulation
-    #[clap(short, long)]
-    end: u64,
+fn parse_data_source(source: &str) -> Option<DataSource> {
+    match source.to_lowercase().as_str() {
+        "thegraph" => Some(DataSource::TheGraph),
+        // Add other sources here
+        _ => None,
+    }
 }
 
 fn main() {
     let opts: Opts = Opts::parse();
-
     let chain = &opts.chain;
     let pair = &opts.pair;
-    let min = Some(opts.min);
-    let max = Some(opts.max);
-    let fee = opts.fee;
-    let start = opts.start;
-    let end = opts.end;
 
-    let subgraph_url = get_subgraph_url(chain);
-    let historical_data = fetch_historical_data(subgraph_url, pair, start, end);
-    let simulation_results = simulate_liquidity(historical_data, min, max, fee);
-
-    for result in simulation_results {
-        println!("{:?}", result);
+    if let Some(data_source) = parse_data_source(&opts.data_source) {
+        let client = create_client(&data_source); // Pass a reference to avoid moving the value
+        match &data_source { 
+            DataSource::TheGraph => {
+                let subgraph_url = get_subgraph_url(chain);
+                let pool_data = client.get_pool_data(subgraph_url, pair);
+                match pool_data {
+                    Some(data) => {
+                        // Process the data as needed
+                        println!("Pool data: {:?}", data);
+                    },
+                    None => {
+                        println!("No data found for pool {}", pair);
+                    }
+                }
+            },
+            // Handle other data sources as needed
+        }
+    } else {
+        eprintln!("Invalid data source provided: {}", opts.data_source);
     }
 }
+
